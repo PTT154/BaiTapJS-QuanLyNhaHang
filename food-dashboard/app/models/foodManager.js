@@ -21,14 +21,31 @@ class FoodManager {
     }
 
     deleteFood(id) {
+        // tìm vị trí của food cần xóa
         const index = this.findIndexFood(id);
         // xóa món ăn
         if (index !== -1) {
             this.arr.splice(index, 1);
         }
     }
-    editFood() { }
-    update() { }
+    editFood(id) {
+        // tìm vị trí của food cần edit
+        const index = this.findIndexFood(id);
+        // lấy food từ vị trí tìm thấy trong mảng
+        if (index !== -1) {
+            //trả về food
+            return this.arr[index];
+        }
+        return null;
+    }
+    updateFood(food) {
+        // Tìm vị trí food cần update
+        const index = this.findIndexFood(food.id);
+
+        if (index !== -1){
+            this.arr[index] = food;
+        }
+    }
     filterFood() { }
 }
 

@@ -45,6 +45,7 @@ const renderListFoods = (data) => {
             <td>${food.pricePromotion}</td>
             <td>${statusCovert}</td>
             <td>
+                <button class = "btn btn-info" data-toggle="modal" data-target="#exampleModal" onclick = "handleEditFood('${food.id}')">Edit</button>
                 <button class = "btn btn-danger" onclick = "handleDeleteFood('${food.id}')">Delete</button>
             </td>
         </tr>
@@ -53,8 +54,26 @@ const renderListFoods = (data) => {
     getEle("tbodyFood").innerHTML = contentHTML;
 };
 
-// delete Food
+//Sửa lại tiêu đề và hiển thị lại nút thêm cho nút "Thêm Món Ăn"
+getEle('btnThem').onclick = function () {
+    getEle('exampleModalLabel').innerHTML = "Add Food";
 
+    // hiển thị lại nút thêm
+    getEle('btnThemMon').style.display = "inline-block";
+
+    // Ẩn nút cập nhật
+    getEle('btnCapNhat').style.display = "none";
+
+    //reset value
+    getEle('foodForm').reset();
+
+    // enable input
+    // getEle('foodID').removeAttribute("disabled");
+    // cách 2
+    getEle('foodID').disabled = false;
+}
+
+// delete Food
 const handleDeleteFood = (id) => {
     manager.deleteFood(id);
     renderListFoods(manager.arr);
@@ -63,6 +82,54 @@ const handleDeleteFood = (id) => {
 
 // khai báo handleDeleteFood ra ngoài window (để dùng được hàm handleDeleteFood)
 window.handleDeleteFood = handleDeleteFood;
+
+// edit food
+const handleEditFood = (id) => {
+    // Sửa lại tiêu đề của model
+    getEle('exampleModalLabel').innerHTML = "Edit Food";
+
+    // disable nút thêm
+    getEle('btnThemMon').style.display = "none";
+
+    // hiển thị lại nút cập nhật
+    getEle('btnCapNhat').style.display = "inline-block";
+
+    const food = manager.editFood(id);
+    if (food) {
+        // show value của food ra form
+        getEle('foodID').value = food.id;
+
+        // disable input
+        // getEle('foodID').setAttribute("disabled", true);
+        // cách 2
+        getEle('foodID').disabled = true;
+
+        getEle('tenMon').value = food.name;
+        getEle('loai').value = food.type;
+        getEle('giaMon').value = food.price;
+        getEle('khuyenMai').value = food.discount;
+        getEle('tinhTrang').value = food.status;
+        getEle('hinhMon').value = food.img;
+        getEle('moTa').value = food.description;
+    }
+};
+
+window.handleEditFood = handleEditFood;
+
+// button Cập nhật lại food
+getEle('btnCapNhat').onclick = function () {
+    const food = getInfoFood();
+    //cập nhật food
+    manager.updateFood(food);
+    //hiển thị food ra ngoài tbody
+    renderListFoods(manager.arr);
+
+    //set local storage
+    setLocalStorage();
+
+    //close modal
+    document.getElementsByClassName('close')[0].click();
+}
 
 // SetLocalStorage: Lưu trữ danh sách món ăn xuống LocalStorage
 const setLocalStorage = () => {
@@ -98,5 +165,8 @@ getEle('btnThemMon').onclick = function () {
 
     //set local storage
     setLocalStorage();
+
+    //close modal
+    document.getElementsByClassName('close')[0].click();
 };
 
