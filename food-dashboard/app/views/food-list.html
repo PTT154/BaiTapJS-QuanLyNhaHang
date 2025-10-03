@@ -45,7 +45,8 @@
       data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+    <input id="search" class="form-control form-control-dark w-100" type="text" placeholder="Search"
+      aria-label="Search">
     <ul class="navbar-nav px-3">
       <li class="nav-item text-nowrap">
         <a class="nav-link" href="#">Sign out</a>
@@ -107,7 +108,7 @@
               <label for="selLoai" class="col-sm-2 col-form-label">Show</label>
               <div class="col-sm-10">
                 <select class="custom-select" id="selLoai">
-                  <option selected>Chọn loại</option>
+                  <option value="all" selected>Chọn loại</option>
                   <option value="all">Tất cả</option>
                   <option value="loai1">Chay</option>
                   <option value="loai2">Mặn</option>

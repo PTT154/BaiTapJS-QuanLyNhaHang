@@ -140,7 +140,6 @@ const setLocalStorage = () => {
 };
 
 // getLocalStorage: Lấy danh sách món ăn từ LocalStorage lên
-
 const getLocalStorage = () => {
     const dataString = localStorage.getItem("LIST_FOOD");
     if (!dataString) return; // Không có dữ liệu thì thoát luôn
@@ -170,3 +169,28 @@ getEle('btnThemMon').onclick = function () {
     document.getElementsByClassName('close')[0].click();
 };
 
+// Select Filter Food
+getEle('selLoai').addEventListener('change', function () {
+    const type = getEle('selLoai').value;
+    const foodFilter = manager.filterFood(type);
+
+    //hiển thị food ra ngoài tbody
+    renderListFoods(foodFilter);
+
+    //set local storage
+    setLocalStorage();
+});
+
+// Search Food
+getEle('search').addEventListener('keyup', function () {
+    const keyword = getEle('search').value;
+
+    const foodSearch = manager.searchFood(keyword);
+
+    //hiển thị food ra ngoài tbody
+    renderListFoods(foodSearch);
+
+    //set local storage
+    setLocalStorage();
+
+});
