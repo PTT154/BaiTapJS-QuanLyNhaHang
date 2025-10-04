@@ -1,12 +1,16 @@
 import Food from "../models/food.js";
 import FoodManager from "../models/foodManager.js";
+import Validation from "../models/validation.js";
+
+// tạo đối tượng validate
+const validate = new Validation();
 
 // tạo đối tượng manager từ lớp đối tượng FoodManager
 const manager = new FoodManager();
 
-const getEle = (id) => document.getElementById(id); //Nếu dùng arrow function thì có thể chỉ cần viết một dòng đẻ trả về như thế này
+export const getEle = (id) => document.getElementById(id); //Nếu dùng arrow function thì có thể chỉ cần viết một dòng đẻ trả về như thế này
 
-const getInfoFood = () => {
+const getInfoFood = (isAdd) => {
     const id = getEle('foodID').value;
     const name = getEle('tenMon').value;
     const type = getEle('loai').value;
@@ -15,6 +19,42 @@ const getInfoFood = () => {
     const status = getEle('tinhTrang').value;
     const img = getEle('hinhMon').value;
     const des = getEle('moTa').value;
+
+    /**
+     * Kiểm tra tính hợp lệ (validation)
+     */
+
+    //flag: boolean
+    let isValid = true;
+
+    // if (id === "") {
+    //     // Lỗi => Show câu thông báo lỗi
+    //     getEle('invalidID').style.display = 'block';
+    //     getEle('invalidID').innerHTML = '(*) Vui lòng nhập ID';
+    //     isValid = false;
+    // } else {
+    //     // có nhập ID
+    //     getEle('invalidID').style.display = 'none';
+    //     getEle('invalidID').innerHTML = '';
+    //     isValid = true;
+    // }
+
+    // dùng lớp đối tượng validate để kiểm tra
+    if (isAdd) {
+        //validation id
+        isValid &= validate.checkEmpty(id, 'invalidID', '(*) Vui lòng nhập ID') && validate.checkExist(id, 'invalidID', '(*) ID đã tồn tại', manager.arr);
+    }
+    //validation name
+    isValid &= validate.checkEmpty(name, 'invalidTen', '(*) Vui lòng nhập tên món') && validate.checkCharacterString(name, 'invalidTen', '(*) Vui lòng nhập chuỗi kí tự') && validate.checkLength(name, 'invalidTen', '(*) vui lòng nhập tên món từ 3 đến 10 ký tự', 3, 10);
+    //validation price
+    isValid &= validate.checkEmpty(price, 'invalidGia', '(*) Vui lòng nhập giá món') && validate.checkMoneyNumber(price, 'invalidGia', '(*) Vui lòng nhập chuỗi số');
+    //validation type
+    isValid &= validate.checkOption('loai', 'invalidLoai', '(*) Vui lòng chọn loại món');
+    //validation discount
+    isValid &= validate.checkOption('khuyenMai', 'invalidKM', '(*) Vui lòng chọn giảm giá');
+    //validation status
+    isValid &= validate.checkOption('tinhTrang', 'invalidTT', '(*) Vui lòng chọn trạng thái');
+    if (!isValid) return null; //trả về null không thực hiện code bên dưới (sau đó xử lý giá trị null ở phần add food)
 
     // tạo đối tượng food từ lớp đối tượng Food (phân biệt chữ hoa và thường)
     const food = new Food(id, name, type, price, discount, status, img, des);
@@ -118,7 +158,7 @@ window.handleEditFood = handleEditFood;
 
 // button Cập nhật lại food
 getEle('btnCapNhat').onclick = function () {
-    const food = getInfoFood();
+    const food = getInfoFood(false);
     //cập nhật food
     manager.updateFood(food);
     //hiển thị food ra ngoài tbody
@@ -155,7 +195,9 @@ getLocalStorage();
 
 // Add food
 getEle('btnThemMon').onclick = function () {
-    const food = getInfoFood();
+    const food = getInfoFood(true);
+    // nếu là null thì return không thực hiện bên dưới (không thêm food vào mảng)
+    if (!food) return;
     // add food vào arr
     manager.addFood(food);
 
@@ -181,9 +223,23 @@ getEle('selLoai').addEventListener('change', function () {
     setLocalStorage();
 });
 
-// Search Food
-getEle('search').addEventListener('keyup', function () {
-    const keyword = getEle('search').value;
+// Search Food 
+// getEle('search').addEventListener('keyup', function () {
+//     const keyword = getEle('search').value;
+
+//     const foodSearch = manager.searchFood(keyword);
+
+//     //hiển thị food ra ngoài tbody
+//     renderListFoods(foodSearch);
+
+//     //set local storage
+//     setLocalStorage();
+
+// });
+
+//Search Food search thứ 2
+getEle('txtSearch').addEventListener('keyup', function () {
+    const keyword = getEle('txtSearch').value;
 
     const foodSearch = manager.searchFood(keyword);
 
