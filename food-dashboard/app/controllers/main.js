@@ -45,7 +45,7 @@ const getInfoFood = (isAdd) => {
         isValid &= validate.checkEmpty(id, 'invalidID', '(*) Vui lòng nhập ID') && validate.checkExist(id, 'invalidID', '(*) ID đã tồn tại', manager.arr);
     }
     //validation name
-    isValid &= validate.checkEmpty(name, 'invalidTen', '(*) Vui lòng nhập tên món') && validate.checkCharacterString(name, 'invalidTen', '(*) Vui lòng nhập chuỗi kí tự') && validate.checkLength(name, 'invalidTen', '(*) vui lòng nhập tên món từ 3 đến 10 ký tự', 3, 10);
+    isValid &= validate.checkEmpty(name, 'invalidTen', '(*) Vui lòng nhập tên món') && validate.checkCharacterString(name, 'invalidTen', '(*) Vui lòng nhập chuỗi kí tự') && validate.checkLength(name, 'invalidTen', '(*) Vui lòng nhập tên món từ 3 đến 10 ký tự', 3, 10);
     //validation price
     isValid &= validate.checkEmpty(price, 'invalidGia', '(*) Vui lòng nhập giá món') && validate.checkMoneyNumber(price, 'invalidGia', '(*) Vui lòng nhập chuỗi số');
     //validation type
@@ -159,6 +159,8 @@ window.handleEditFood = handleEditFood;
 // button Cập nhật lại food
 getEle('btnCapNhat').onclick = function () {
     const food = getInfoFood(false);
+    //nếu food bị null (không nhập một giá trị nào đó)
+    if(!food) return; // return không thực hiện bên dưới
     //cập nhật food
     manager.updateFood(food);
     //hiển thị food ra ngoài tbody

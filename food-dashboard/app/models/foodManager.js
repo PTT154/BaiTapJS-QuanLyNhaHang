@@ -45,7 +45,6 @@ class FoodManager {
         if (index !== -1) {
             this.arr[index] = food;
         }
-        return null;
     }
 
     filterFood(type) {
